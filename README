@@ -10,3 +10,4 @@ run web-server:
 
 run tests:
     sudo python /tests/test.py
+    
