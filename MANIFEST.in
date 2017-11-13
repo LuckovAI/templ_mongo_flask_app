@@ -1,0 +1,4 @@
+graft mongo_flask/templates
+graft mongo_flask/static
+graft mongo_flask/blueprints
+include mongo_flask/baseconfig.conf
