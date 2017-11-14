@@ -172,7 +172,7 @@ def requires_auth(f):
         except Exception, exc:
             err = u'Ошибка базовой авторизации. ' + str(exc)
             current_app.logger.debug(err)
-            print err
+            #print err
             return authenticate()
         return f(*args, **kwargs)
 

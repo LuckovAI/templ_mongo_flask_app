@@ -6,8 +6,7 @@ Install
         sudo python setup.py install
         
 run web-server:
-    sudo python /mongo_flask/start.py
+    sudo python mongo_flask/start.py
 
 run tests:
-    sudo python /tests/test.py
-    
+    sudo python tests/test.py
