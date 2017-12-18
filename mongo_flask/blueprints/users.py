@@ -3,6 +3,7 @@ from mongo_flask.extflask import ExtBlueprint
 from flask import g
 from mongo_flask.utils import is_auth
 
+
 url_prefix = '/users'
 bp = ExtBlueprint('users', __name__)
 

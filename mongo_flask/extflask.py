@@ -4,6 +4,7 @@ import json
 from inspect import getargspec
 from functools import wraps
 from bson import json_util
+import ast
 
 
 class ExtBlueprint(flask.Blueprint):
@@ -15,7 +16,6 @@ class ExtBlueprint(flask.Blueprint):
 
     def dec_parse_input_param(self, f):
         """"создание соответствия для параметров функции и сервиса"""
-
         @wraps(f)
         def parse_input_param(*a):
             try:
@@ -26,7 +26,7 @@ class ExtBlueprint(flask.Blueprint):
                     vparam = []
                     for p in aparam:
                         val = values.get(p)
-                        val = str(val) if str(val).isdigit() or val is None else '"' + val + '"'
+                        val = str(val) if str(val).isdigit() or val is None else '"' + ast.literal_eval(val) + '"'
                         vparam.append(val)
                     return eval('f(' + ', '.join([v for v in vparam]) + ')')
                 return f()
@@ -34,5 +34,4 @@ class ExtBlueprint(flask.Blueprint):
                 msg = u'Ошибка сервиса %s' % str(exc)
                 print msg
                 raise Exception(msg)
-
         return parse_input_param

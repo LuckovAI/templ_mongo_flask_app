@@ -29,24 +29,19 @@ def get_db():
         top.db = client[dbname]
     return top.db
 
-
 def load_config():
     """  Load configuration  """
     conf = dict()
     conf_file = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'baseconfig.conf')
-
     cfg = ConfigParser.RawConfigParser()
-
     try:
         cfg.readfp(codecs.open(conf_file, "r", "utf-8"))
-
     except ConfigParser.Error, ce:
         msg = u'Ошибка чтения файла конфигурации. %s.'
         msg = msg % conf_file
         sys.stderr.write(msg.encode('utf8'))
         syslog.syslog(msg.encode('utf8'))
         raise ce
-
     if not cfg.has_section('log') or \
             not cfg.has_section('db') or \
             not cfg.has_section('base_authenticate'):
@@ -55,9 +50,7 @@ def load_config():
         sys.stderr.write(msg.encode('utf8'))
         syslog.syslog(msg.encode('utf8'))
         raise RuntimeError(msg)
-
     try:
-
         # Настройки логирования
         conf['log_file'] = cfg.get('log', 'log_file')
         conf['format'] = cfg.get('log', 'format')
@@ -65,7 +58,6 @@ def load_config():
         conf['dateformat'] = cfg.get('log', 'dateformat')
         conf['maxBytes'] = cfg.getint('log', 'maxBytes')
         conf['backupCount'] = cfg.getint('log', 'backupCount')
-
         # База
         conf['dbname'] = cfg.get('db', 'dbname')
         conf['host'] = cfg.get('db', 'host')
@@ -79,16 +71,13 @@ def load_config():
         conf['mail'] = cfg.get('mail_account', 'mail')
         conf['mpass'] = cfg.get('mail_account', 'pass')
         conf['server'] = cfg.get('mail_account', 'server')
-
     except (ConfigParser.Error, TypeError), cpex:
         msg = u'Некорректные настройки %s. %s' % (conf_file, cpex)
         sys.stderr.write(msg.encode('utf8'))
         syslog.syslog(msg.encode('utf8'))
         raise cpex
-
     return {'base_conf': conf, 'SECRET_TYPE': bytes(cfg.get('session', 'session_type')),
             'SECRET_KEY': bytes(cfg.get('session', 'secret_key'))}
-
 
 def init_log(app):
     """
@@ -112,7 +101,6 @@ def init_log(app):
     app.logger.debug('TaskImpl::__init_log')
     return
 
-
 def register_blueprints(app):
     "register blueprints"
     for name in find_modules('mongo_flask.blueprints'):
@@ -120,7 +108,6 @@ def register_blueprints(app):
         if hasattr(mod, 'bp') and hasattr(mod, 'url_prefix'):
             app.register_blueprint(mod.bp, url_prefix=mod.url_prefix)
     return
-
 
 def is_auth(f):
     @wraps(f)
@@ -133,16 +120,13 @@ def is_auth(f):
                 response=json.dumps({'error': None, 'result': 'need_login'})
             )
         return f()
-
     return is_authorization
-
 
 def clear_bonus_transact():
     "clear bonus transactions"
     db = get_db()
     bonus_transact = db.bonus_transact
     bonus_transact.delete_many({})
-
 
 def check_auth(username, password):
     """This function is called to check if a username /
@@ -152,14 +136,12 @@ def check_auth(username, password):
     ba_username = current_app.config.get('base_conf').get('ba_username')
     return username == ba_username and password == ba_password
 
-
 def authenticate():
     """Sends a 401 response that enables basic auth"""
     return Response(
         status=401,
         mimetype="application/json",
         response=json.dumps({'WWW-Authenticate': 'Basic realm="Login Required"'}))
-
 
 def requires_auth(f):
     @wraps(f)
@@ -175,5 +157,4 @@ def requires_auth(f):
             #print err
             return authenticate()
         return f(*args, **kwargs)
-
     return decorated

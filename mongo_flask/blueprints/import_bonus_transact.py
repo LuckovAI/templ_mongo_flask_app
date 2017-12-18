@@ -4,6 +4,7 @@ from flask import request
 from mongo_flask.utils import get_db, requires_auth
 import json
 
+
 url_prefix = '/import_bonus_transact'
 bp = ExtBlueprint('import_bonus_transact', __name__)
 
@@ -17,7 +18,6 @@ def set_bonus_transact():
         db = get_db()
         bonus_transact = db.bonus_transact
         users = db.users
-
         for r in obj:
             user = users.find_one({'FIO': r['FIO'], 'num_cart': r['num_cart'],
                                    'email': r['email']})

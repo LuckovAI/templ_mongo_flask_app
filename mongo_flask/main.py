@@ -11,11 +11,12 @@ from base64 import b64encode
 import smtplib
 from email.MIMEText import MIMEText
 
+
 # защита от перебора
 SLEEP = 2
 
-monkey.patch_all()
 
+monkey.patch_all()
 app = Flask(__name__)
 conf = load_config()
 app.config.update(conf)
@@ -23,18 +24,15 @@ register_blueprints(app)
 init_log(app)
 http_server = WSGIServer(('', 5000), app.wsgi_app)
 
-
 @app.route('/', methods=['GET'], endpoint='index')
 @is_auth
 def index():
     return redirect(url_for('users.get_user'))
 
-
 @app.route('/logout', methods=['GET'])
 def logout():
     session.pop('user_id', None)
     return redirect(url_for('index'))
-
 
 @app.before_request
 def before_request():
@@ -42,7 +40,6 @@ def before_request():
     if 'user_id' in session:
         db = get_db()
         g.user = db.users.find_one({"_id": session['user_id']})
-
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -68,7 +65,6 @@ def login():
             mimetype="application/json",
             response=json.dumps({'error': None, 'result': 'ok'})
         )
-
     return Response(
         status=401,
         mimetype="application/json",
@@ -95,7 +91,6 @@ def forget_mail():
             mimetype="application/json",
             response=json.dumps({'result': res[1], 'error': res[2]})
         )
-
     return Response(
         status=401,
         mimetype="application/json",
@@ -136,7 +131,6 @@ def sent_to_mail(email, forget_pass):
     msg['Subject'] = "Temporary password"
     msg['From'] = fromaddr
     msg['To'] = email
-
     try:
         server = smtplib.SMTP_SSL(mserver)
         server.login(fromaddr.split('@')[0], password)
