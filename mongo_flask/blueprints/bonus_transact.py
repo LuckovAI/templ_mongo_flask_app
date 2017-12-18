@@ -18,7 +18,6 @@ def get_bonus_transact(num_page, date_fly, c_bonus, from_place, to_place):
     filters = {}
 
     filters.update({'id_user': g.user['_id']})
-    num_page = 1 if num_page is None else int(num_page)
     if not num_page: num_page = 1
     if date_fly: filters.update({'date_fly': date_fly})
     if c_bonus: filters.update({'c_bonus': int(c_bonus)})
