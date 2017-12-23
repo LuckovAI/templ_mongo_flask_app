@@ -18,7 +18,7 @@ def get_bonus_transact(num_page, date_fly, c_bonus, from_place, to_place):
     bonus_transact = db.bonus_transact
     filters = {}
     filters.update({'id_user': g.user['_id']})
-    if not num_page: num_page = 1
+    num_page = 1 if not num_page else int(num_page)
     if date_fly: filters.update({'date_fly': date_fly})
     if c_bonus: filters.update({'c_bonus': int(c_bonus)})
     if from_place: filters.update({'from_place': from_place})
