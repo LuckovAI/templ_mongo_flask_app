@@ -22,14 +22,6 @@ class ExtBlueprint(flask.Blueprint):
                 # т.к. нам параметры в функцию напрямую не передаются, то получаем их из запроса хттп
                 aparam = getargspec(f).args
                 if len(aparam) > 0:
-                    """values = flask.request.values
-                    vparam = []
-                    for p in aparam:
-                        val = values.get(p)
-                        val = str(val) if str(val).isdigit() or val is None else '"' + ast.literal_eval(val) + '"'
-                        vparam.append(val)
-                    #return eval('f(' + ', '.join([v for v in vparam]) + ')')
-                    return f(*vparam)"""
                     values = []
                     #проверяем зловред код во входящих параметрах
                     [values.append(ast.literal_eval(val)) for val in flask.request.values.values()]
